@@ -47,6 +47,25 @@
 - 快速开始（流式小节）：https://java.agentscope.io/v2/zh/docs/quickstart.html
 - 工具（`@Tool` / `@ToolParam` 的完整用法在后续案例展开）：https://java.agentscope.io/v2/zh/docs/building-blocks/tool.html
 
+## 案例三：快速上手 / 多用户并发
+
+代码位置：
+
+- `src/main/java/learning/agentscope/quickstart/MultiUserFirstAgent.java`
+- `src/test/java/learning/agentscope/quickstart/MultiUserFirstAgentTest.java`
+- `src/main/java/learning/agentscope/quickstart/MultiUserFirstAgent学习笔记.md`
+
+它对应官网快速开始中的“多用户并发”，演示三件事：
+
+1. agent 实例在调用之间无状态：应用启动时 build 一次（单例），全程复用，身份随每次 `call` 通过 `RuntimeContext` 携带。
+2. 状态按 `(userId, sessionId)` 隔离：alice 换一个 sessionId 就不记得旧会话；bob 的上下文不会混入 alice 的对话；产物按用户分目录落盘。
+3. 并发安全由框架保证：同一 `(userId, sessionId)` 的请求被 `SessionTurnGate` 自动串行化（UT 实测 inFlight 恒为 1），不同会话完全并行（UT 实测 inFlight 达到 2），开发者无需加锁。
+
+官网来源：
+
+- 快速开始（多用户并发小节）：https://java.agentscope.io/v2/zh/docs/quickstart.html
+- 上线指南（生产用 Redis 状态存储等）：https://java.agentscope.io/v2/zh/docs/others/going-to-production.html
+
 ## 运行
 
 ### 运行 UT
@@ -82,6 +101,16 @@ mvn -q compile exec:java -Dexec.mainClass=learning.agentscope.quickstart.Streami
 ```
 
 运行时终端会逐段打印文本增量、`[tool-call]` 工具调用标签和最终回答。
+
+### 运行多用户并发案例
+
+同样需要 `DASHSCOPE_API_KEY`：
+
+```bash
+mvn -q compile exec:java -Dexec.mainClass=learning.agentscope.quickstart.MultiUserFirstAgent
+```
+
+运行后可在 `.agentscope/workspace/` 下看到 `alice/` 与 `bob/` 两个用户各自独立的产物目录。
 
 运行第二次时，如果仍使用相同的 `userId`、`sessionId` 和 agent 名称，AgentScope 会从默认状态目录恢复会话。默认状态目录在用户目录下的 `.agentscope/state/`，与工作区分开；这是官网明确说明的设计。
 
