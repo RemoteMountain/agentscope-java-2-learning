@@ -1,0 +1,13 @@
+target/
+.idea/
+
+# AgentScope 运行时产物：按 userId 命名的目录（会话转录、事件、记忆、用户文件）。
+# 种子文件 AGENTS.md 在 workspace 根目录，需要提交；knowledge/skills/subagents 是共享资产，需要提交。
+.agentscope/workspace/*/
+!.agentscope/workspace/knowledge/
+!.agentscope/workspace/skills/
+!.agentscope/workspace/subagents/
+
+# Local credentials must never be committed.
+.env
+*.local
