@@ -10,9 +10,9 @@
 
 ## 当前进度
 
-当前已完成：**快速上手：第一个智能体**、**快速上手：流式查看**、**快速上手：多用户并发**、**智能体基础**。
+当前已完成：**快速上手：第一个智能体**、**快速上手：流式查看**、**快速上手：多用户并发**、**智能体基础**、**RuntimeContext**。
 
-下一次默认从：**RuntimeContext** 开始。
+下一次默认从：**状态与会话** 开始。
 
 ## 路线总览
 
@@ -22,7 +22,7 @@
 | 已完成 | 快速上手：流式查看 | `streamEvents`、文本增量事件、工具调用开始事件 | `StreamingFirstAgent.java` |
 | 已完成 | 快速上手：多用户并发 | 单例 agent、不同 `(userId, sessionId)` 的状态隔离与并发 | `MultiUserFirstAgent.java` |
 | 已完成 | 智能体基础 | `ReActAgent`、`call`、`observe`、`streamEvents`、最大迭代次数 | `ReActAgentExample.java` |
-| 待实现 | RuntimeContext | 字符串属性、类型化属性、工具上下文注入 | `RuntimeContextExample.java` |
+| 已完成 | RuntimeContext | 字符串属性、类型化属性、工具上下文注入 | `RuntimeContextExample.java` |
 | 待实现 | 状态与会话 | `AgentState`、`AgentStateStore`、JSON 文件存储、内存存储 | `AgentStateExample.java` |
 | 待实现 | 工具 | `@Tool`、`Toolkit`、工具参数、工具结果和错误 | `ToolExample.java` |
 | 待实现 | 工具执行上下文 | 工具读取 `RuntimeContext` | `ToolExecutionContextExample.java` |

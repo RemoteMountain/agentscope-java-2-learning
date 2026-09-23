@@ -85,6 +85,27 @@
 
 - 智能体基础：https://java.agentscope.io/v2/zh/docs/building-blocks/agent.html
 
+## 案例五：RuntimeContext——每次 call 的“叫号单”
+
+代码位置：
+
+- `src/main/java/learning/agentscope/agent/RuntimeContextExample.java`
+- `src/test/java/learning/agentscope/agent/RuntimeContextExampleTest.java`
+- `src/main/java/learning/agentscope/agent/RuntimeContextExample学习笔记.md`
+
+它对应官网 building-blocks 的 Context & AgentState：
+
+1. 三类内容：内建 `userId`/`sessionId`（state 寻址键）、字符串属性、类型化属性；
+2. 工具三条注入路径（UT 实测）：注入整个 `RuntimeContext`、方法体里读两类属性、
+   **无注解 POJO 参数按类型化属性直接注入**（模型看不见、伪造不了）；
+3. 属性存活边界（实验实测）：同会话槽位内跨调用可读（上下文被缓存），换 sessionId 即消失，
+   从不落盘。
+
+官网来源：
+
+- Context & AgentState：https://java.agentscope.io/v2/en/docs/building-blocks/context.html
+- 工具参数注入规则：https://java.agentscope.io/v2/en/docs/building-blocks/tool.html
+
 ## 运行
 
 ### 运行 UT
@@ -140,6 +161,16 @@ mvn -q compile exec:java -Dexec.mainClass=learning.agentscope.agent.ReActAgentEx
 ```
 
 演示 `call`（查时间）→ `observe`（喂昵称事实）→ `streamEvents`（问答）三段。
+
+### 运行 RuntimeContext 案例
+
+同样需要 `DASHSCOPE_API_KEY`：
+
+```bash
+mvn -q compile exec:java -Dexec.mainClass=learning.agentscope.agent.RuntimeContextExample
+```
+
+工具会把当前请求的用户/请求号/租户元数据回显进回答。
 
 运行第二次时，如果仍使用相同的 `userId`、`sessionId` 和 agent 名称，AgentScope 会从默认状态目录恢复会话。默认状态目录在用户目录下的 `.agentscope/state/`，与工作区分开；这是官网明确说明的设计。
 
