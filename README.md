@@ -66,6 +66,25 @@
 - 快速开始（多用户并发小节）：https://java.agentscope.io/v2/zh/docs/quickstart.html
 - 上线指南（生产用 Redis 状态存储等）：https://java.agentscope.io/v2/zh/docs/others/going-to-production.html
 
+## 案例四：智能体基础 / 裸 ReActAgent
+
+代码位置：
+
+- `src/main/java/learning/agentscope/agent/ReActAgentExample.java`
+- `src/test/java/learning/agentscope/agent/ReActAgentExampleTest.java`
+- `src/main/java/learning/agentscope/agent/ReActAgentExample学习笔记.md`
+
+它对应官网 building-blocks/agent，把 HarnessAgent 的"行李"拆掉，直接用内核 `ReActAgent`：
+
+1. `call` 跑推理-行动循环；`observe` 只把消息放进上下文、不触发推理（实测模型零调用）；
+2. 裸内核没有默认工具（实测只有注册的那 1 个，对比 Harness 的 23 个）、默认不持久化状态；
+3. `maxIters` 超限的真实语义（实验实测）：不是硬中断，而是"没收工具、强制收尾"——
+   `EXCEED_MAX_ITERS` 后再给一次不带工具的模型调用，仍产出 `AGENT_RESULT`。
+
+官网来源：
+
+- 智能体基础：https://java.agentscope.io/v2/zh/docs/building-blocks/agent.html
+
 ## 运行
 
 ### 运行 UT
@@ -111,6 +130,16 @@ mvn -q compile exec:java -Dexec.mainClass=learning.agentscope.quickstart.MultiUs
 ```
 
 运行后可在 `.agentscope/workspace/` 下看到 `alice/` 与 `bob/` 两个用户各自独立的产物目录。
+
+### 运行裸 ReActAgent 案例
+
+同样需要 `DASHSCOPE_API_KEY`：
+
+```bash
+mvn -q compile exec:java -Dexec.mainClass=learning.agentscope.agent.ReActAgentExample
+```
+
+演示 `call`（查时间）→ `observe`（喂昵称事实）→ `streamEvents`（问答）三段。
 
 运行第二次时，如果仍使用相同的 `userId`、`sessionId` 和 agent 名称，AgentScope 会从默认状态目录恢复会话。默认状态目录在用户目录下的 `.agentscope/state/`，与工作区分开；这是官网明确说明的设计。
 
