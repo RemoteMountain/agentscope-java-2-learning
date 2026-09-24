@@ -180,5 +180,6 @@ mvn -q compile exec:java -Dexec.mainClass=learning.agentscope.agent.RuntimeConte
 - `src/test/java`：不依赖真实模型的确定性测试；外部模型只在 `main` 中演示。
 - `.agentscope/workspace`：案例使用的工作区种子文件；运行时产物已加入 `.gitignore`。
 - `ROADMAP.md`：全站案例路线、当前进度和下一步入口。
+- 文档与代码中**不得出现公司名、内部项目名等标记**；引用外部生产项目一律用中性词（如“生产参考项目”）。
 
 暂不在本次切片实现流式事件、多用户并发运行、工具、MCP、记忆、子 agent、沙箱等后续案例，详见 `ROADMAP.md`。
