@@ -71,7 +71,7 @@ public String echoTenant(
 - `context.getAgentState()`：框架在 call 开始时把加载好的 AgentState 挂到单子上，中间件和
   工具都该从 `ctx.getAgentState()` 读（而不是 `agent.getAgentState()`——并发时后者给的是
   "最后活跃会话"的状态，官网原话警告）；
-- 生产参考项目 往单子上挂 `compId/runId/capabilitySnapshotId/治理上下文`，就是字符串属性 +
+- 生产参考项目往单子上挂 `compId/runId/capabilitySnapshotId/治理上下文`，就是字符串属性 +
   类型化属性的生产级用法。
 
 ## 5. 复现命令

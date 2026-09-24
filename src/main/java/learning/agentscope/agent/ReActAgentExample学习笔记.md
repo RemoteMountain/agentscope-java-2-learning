@@ -67,8 +67,8 @@ mvn test -Dtest=ReActAgentExampleTest
 mvn -q compile exec:java -Dexec.mainClass=learning.agentscope.agent.ReActAgentExample
 ```
 
-## 6. 和 生产参考项目 项目的呼应
+## 6. 和生产参考项目的呼应
 
-生产参考项目 的 `DefaultRuntimeGenerationFactory` 构建的每个 HarnessAgent 都 `.disable...` 了一大排
+生产参考项目的 `DefaultRuntimeGenerationFactory` 构建的每个 HarnessAgent 都 `.disable...` 了一大排
 默认能力——本质上就是"往裸内核方向拆"。学完本案例再看他们那 50 行 builder，会发现
 **ReActAgent + 自选中间件**和**HarnessAgent + 全 disable**是同一件事的两种写法。
