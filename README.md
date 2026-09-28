@@ -106,6 +106,27 @@
 - Context & AgentState：https://java.agentscope.io/v2/en/docs/building-blocks/context.html
 - 工具参数注入规则：https://java.agentscope.io/v2/en/docs/building-blocks/tool.html
 
+## 案例六：状态与会话（AgentState / AgentStateStore）
+
+代码位置：
+
+- `src/main/java/learning/agentscope/agent/AgentStateExample.java`（含同包测试与笔记）
+
+它验证"重启不丢会话"的原理：`JsonFileAgentStateStore` 跨 agent 实例恢复对话；
+产物布局实测（自定义根目录下没有 agent 名层，默认根的 agent 层是为多 agent 防碰撞）；
+`clearContext` 删档 vs `clearStateCache` 刷缓存。
+
+## 案例七：中断（interrupt）
+
+代码位置：
+
+- `src/main/java/learning/agentscope/agent/InterruptExample.java`（含同包测试与笔记）
+
+interrupt 的完整语义（实验拼图）：标志位存 AgentState（需挂 stateStore 寻址）→
+模型流块间隙检查（需异步流，真实模型天然满足）→ 循环掐断并优雅收尾；
+打不断正在阻塞的单次模型调用（协作式，非抢占式）。UT 中 fake 模型必须加
+`delayElements` 才能演示中断——这是本轮最大的坑位贡献。
+
 ## 运行
 
 ### 运行 UT
