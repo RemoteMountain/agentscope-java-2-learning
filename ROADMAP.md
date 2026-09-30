@@ -10,9 +10,9 @@
 
 ## 当前进度
 
-当前已完成：快速上手三案例 + 智能体基础 + RuntimeContext + 状态与会话 + 中断 + 工具。
+当前已完成：快速上手三案例 + 智能体基础 + RuntimeContext + 状态与会话 + 中断 + 工具 + 工具执行上下文。
 
-下一次默认从：**工具执行上下文** 开始。
+下一次默认从：**MCP** 开始。
 
 ## 路线总览
 
@@ -26,7 +26,7 @@
 | 已完成 | 状态与会话 | `AgentState`、`AgentStateStore`、JSON 文件存储、内存存储 | `AgentStateExample.java` |
 | 已完成 | 中断 | `interrupt()`、InterruptControl、协作式中断语义（官网有、路线图此前漏，已补） | `InterruptExample.java` |
 | 已完成 | 工具 | `@Tool`、`Toolkit`、工具参数、工具结果和错误 | `ToolExample.java` |
-| 待实现 | 工具执行上下文 | 工具读取 `RuntimeContext` | `ToolExecutionContextExample.java` |
+| 已完成 | 工具执行上下文 | `@Tool` 自动注入 POJO、`ToolBase.callAsync` 读取 `RuntimeContext` | `ToolExecutionContextExample.java` |
 | 待实现 | MCP | MCP client、HTTP/stdio server、工具注册 | `McpExample.java` |
 | 待实现 | 权限系统 | allow/deny/ask、工具确认和规则持久化 | `PermissionExample.java` |
 | 待实现 | 人机交互 | `RequireUserConfirmEvent`、确认结果、恢复调用 | `PermissionHITLExample.java` |
@@ -52,5 +52,7 @@
 流式事件、多用户并发和真实模型错误处理属于同一快速开始页面的后续小节，按表格顺序继续实现。
 
 `StreamingFirstAgent` 已覆盖流式事件；它顺带注册了一个 `@Tool` 最小自定义工具，完整的工具注册、参数、结果和错误语义由 `ToolExample` 覆盖。本轮发现并绕开的坑：Harness 的记忆钩子（`MemoryFlushMiddleware` 等）会在每轮结束后异步追加一次模型调用（提示词以 "Extract NEW memories..."/"Today's daily ledger..." 开头），与测试断言存在竞态；UT 的构造入口统一 `.disableMemoryHooks()`。开关的确切区别由 `MemoryHooksDifferenceTest` 对照验证，长期记忆行为留给“长期记忆”路线项。
+
+`ToolExecutionContextExample` 补充工具侧的上下文边界：注解式工具自动注入类型化 POJO，`ToolBase` 从 `ToolCallParam` 读取 `RuntimeContext`；旧的 `ToolExecutionContext` 兼容 API 已标记弃用，新代码统一使用 `RuntimeContext`。
 
 `MultiUserFirstAgent` 已覆盖单例多用户与并发语义（隔离、跨会话并行、同会话串行，均由 UT 用 inFlight 探针确定性验证）；默认 `JsonFileAgentStateStore` 的单机限制与生产 Redis 方案留给“生产部署”路线项。

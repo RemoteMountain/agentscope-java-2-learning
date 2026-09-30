@@ -146,6 +146,23 @@ interrupt 的完整语义（实验拼图）：标志位存 AgentState（需挂 s
 
 - 工具：https://java.agentscope.io/v2/zh/docs/building-blocks/tool.html
 
+## 案例九：工具执行上下文（ToolExecutionContext）
+
+代码位置：
+
+- `src/main/java/learning/agentscope/tool/ToolExecutionContextExample.java`
+- `src/test/java/learning/agentscope/tool/ToolExecutionContextExampleTest.java`
+- `src/main/java/learning/agentscope/tool/ToolExecutionContextExample学习笔记.md`
+
+它对应官网 Tool 页的“接收 Context”，演示两条路径：
+
+1. `@Tool` 方法中未标注 `@ToolParam` 的自定义 POJO 参数由 `RuntimeContext` 自动注入，且不进入工具 Schema；
+2. `ToolBase.callAsync` 通过 `ToolCallParam.getRuntimeContext()` 显式读取当前调用上下文。
+
+官网来源：
+
+- 工具执行上下文：https://java.agentscope.io/v2/zh/docs/building-blocks/tool.html#接收-context
+
 ## 运行
 
 ### 运行 UT
@@ -212,6 +229,8 @@ mvn -q compile exec:java -Dexec.mainClass=learning.agentscope.agent.RuntimeConte
 
 工具会把当前请求的用户/请求号/租户元数据回显进回答。
 
+运行第二次时，如果仍使用相同的 `userId`、`sessionId` 和 agent 名称，AgentScope 会从默认状态目录恢复会话。默认状态目录在用户目录下的 `.agentscope/state/`，与工作区分开；这是官网明确说明的设计。
+
 ### 运行工具案例
 
 同样需要 `DASHSCOPE_API_KEY`：
@@ -222,7 +241,13 @@ mvn -q compile exec:java -Dexec.mainClass=learning.agentscope.tool.ToolExample
 
 运行后 Agent 会调用 `add_numbers`，再输出计算结果。
 
-运行第二次时，如果仍使用相同的 `userId`、`sessionId` 和 agent 名称，AgentScope 会从默认状态目录恢复会话。默认状态目录在用户目录下的 `.agentscope/state/`，与工作区分开；这是官网明确说明的设计。
+### 运行工具执行上下文案例
+
+同样需要 `DASHSCOPE_API_KEY`：
+
+```bash
+mvn -q compile exec:java -Dexec.mainClass=learning.agentscope.tool.ToolExecutionContextExample
+```
 
 ## 工程约定
 
