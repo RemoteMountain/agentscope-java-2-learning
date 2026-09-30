@@ -45,7 +45,7 @@
 官网来源：
 
 - 快速开始（流式小节）：https://java.agentscope.io/v2/zh/docs/quickstart.html
-- 工具（`@Tool` / `@ToolParam` 的完整用法在后续案例展开）：https://java.agentscope.io/v2/zh/docs/building-blocks/tool.html
+- 工具（`@Tool` / `@ToolParam` 的完整用法见案例八）：https://java.agentscope.io/v2/zh/docs/building-blocks/tool.html
 
 ## 案例三：快速上手 / 多用户并发
 
@@ -127,6 +127,25 @@ interrupt 的完整语义（实验拼图）：标志位存 AgentState（需挂 s
 打不断正在阻塞的单次模型调用（协作式，非抢占式）。UT 中 fake 模型必须加
 `delayElements` 才能演示中断——这是本轮最大的坑位贡献。
 
+## 案例八：工具（Tool）
+
+代码位置：
+
+- `src/main/java/learning/agentscope/tool/ToolExample.java`
+- `src/test/java/learning/agentscope/tool/ToolExampleTest.java`
+- `src/main/java/learning/agentscope/tool/ToolExample学习笔记.md`
+
+它对应官网 building-blocks/tool，演示四件事：
+
+1. 用 `@Tool` 和 `@ToolParam` 从普通 Java 方法生成工具 Schema；
+2. 用 `Toolkit.registerTool(Object)` 注册工具；
+3. 工具成功后，`ToolResultBlock` 通过 `TOOL` 消息回到下一轮模型请求；
+4. 工具抛出异常后生成 `ToolResultState.ERROR`，Agent 仍能继续生成最终回答。
+
+官网来源：
+
+- 工具：https://java.agentscope.io/v2/zh/docs/building-blocks/tool.html
+
 ## 运行
 
 ### 运行 UT
@@ -193,6 +212,16 @@ mvn -q compile exec:java -Dexec.mainClass=learning.agentscope.agent.RuntimeConte
 
 工具会把当前请求的用户/请求号/租户元数据回显进回答。
 
+### 运行工具案例
+
+同样需要 `DASHSCOPE_API_KEY`：
+
+```bash
+mvn -q compile exec:java -Dexec.mainClass=learning.agentscope.tool.ToolExample
+```
+
+运行后 Agent 会调用 `add_numbers`，再输出计算结果。
+
 运行第二次时，如果仍使用相同的 `userId`、`sessionId` 和 agent 名称，AgentScope 会从默认状态目录恢复会话。默认状态目录在用户目录下的 `.agentscope/state/`，与工作区分开；这是官网明确说明的设计。
 
 ## 工程约定
@@ -203,4 +232,4 @@ mvn -q compile exec:java -Dexec.mainClass=learning.agentscope.agent.RuntimeConte
 - `ROADMAP.md`：全站案例路线、当前进度和下一步入口。
 - 文档与代码中**不得出现公司名、内部项目名等标记**；引用外部生产项目一律用中性词（如“生产参考项目”）。
 
-暂不在本次切片实现流式事件、多用户并发运行、工具、MCP、记忆、子 agent、沙箱等后续案例，详见 `ROADMAP.md`。
+后续案例（MCP、记忆、子 agent、沙箱等）详见 `ROADMAP.md`。
